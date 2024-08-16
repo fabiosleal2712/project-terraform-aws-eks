@@ -36,5 +36,5 @@ module "secrets_manager" {
 
 module "cdn" {
   source = "./modules/cdn"
-  origin_domain_name = "example.com"
+  origin_domain_name = "my-valid-s3-bucket.s3.amazonaws.com"
 }
