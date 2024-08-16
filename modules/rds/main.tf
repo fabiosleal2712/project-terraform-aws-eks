@@ -1,9 +1,19 @@
+variable "vpc_id" {
+  description = "ID da VPC onde o RDS será criado"
+  type        = string
+}
+
+variable "security_group_id" {
+  description = "ID do grupo de segurança para o RDS"
+  type        = string
+}
+
 resource "aws_db_instance" "default" {
   allocated_storage    = 20
   engine               = "mysql"
-  engine_version       = "8.0"
-  instance_class       = "db.t2.micro"
-  db_name             = "mydb"
+  engine_version       = "8.0.35"
+  instance_class       = "db.t3.micro"
+  db_name              = "mydb"
   username             = "admin"
   password             = var.db_password
   parameter_group_name = "default.mysql8.0"

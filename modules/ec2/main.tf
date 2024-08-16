@@ -7,11 +7,10 @@ resource "aws_instance" "web" {
 }
 
 resource "aws_launch_configuration" "example" {
-  name          = "example-launch-configuration"
-  image_id      = "ami-0ae8f15ae66fe8cda" # Substitua conforme necessário
+  name          = "example-launch-configuration-unique"
+  image_id      = "ami-0ae8f15ae66fe8cda"
   instance_type = "t2.micro"
   security_groups = [var.security_group_id]
-
   lifecycle {
     create_before_destroy = true
   }
