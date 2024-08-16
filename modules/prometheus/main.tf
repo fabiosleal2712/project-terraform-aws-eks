@@ -10,8 +10,6 @@ resource "helm_release" "prometheus" {
   }
 }
 
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/kubeconfig"
-  }
+provider "kubernetes" {
+  config_path = "~/.kube/config"
 }

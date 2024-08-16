@@ -34,3 +34,42 @@ resource "aws_route_table_association" "public" {
   subnet_id = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
+
+resource "aws_security_group" "main" {
+  vpc_id = aws_vpc.main.id
+  description = "EKS Cluster Security Group"
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_subnet" "private_a" {
+  vpc_id            = var.vpc_id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 1)
+  availability_zone = "us-east-1a"
+  tags = {
+    Name = "private-subnet-a"
+  }
+}
+
+resource "aws_subnet" "private_b" {
+  vpc_id            = var.vpc_id
+  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 2)
+  availability_zone = "us-east-1b"
+  tags = {
+    Name = "private-subnet-b"
+  }
+}
+
+output "private_subnets" {
+  value = [aws_subnet.private_a.id, aws_subnet.private_b.id]
+}
