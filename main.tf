@@ -34,6 +34,7 @@ module "eks" {
   source = "./modules/eks"
   vpc_id = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
+  
 }
 
 module "rds" {
@@ -55,3 +56,16 @@ module "cdn" {
   origin_domain_name = "my-valid-s3-bucket.s3.amazonaws.com"
 }
 
+
+
+module "prometheus" {
+  source = "./modules/prometheus"
+  vpc_id = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+}
+
+module "grafana" {
+  source = "./modules/grafana"
+  vpc_id = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+}
