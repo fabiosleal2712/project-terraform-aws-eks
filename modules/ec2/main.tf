@@ -20,7 +20,7 @@ resource "aws_autoscaling_group" "example" {
   desired_capacity     = 2
   max_size             = 5
   min_size             = 1
-  vpc_zone_identifier  = ["subnet-0f0914a6453a66430", "subnet-097610122c23df076"]
+  vpc_zone_identifier  = var.subnet_ids
   launch_configuration = aws_launch_configuration.example.id
   tag {
     key                 = "Name"

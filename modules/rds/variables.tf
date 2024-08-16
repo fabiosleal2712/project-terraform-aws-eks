@@ -8,12 +8,3 @@ variable "db_password" {
 }
 
 
-variable "vpc_id" {
-  description = "ID da VPC onde o RDS será criado"
-  type        = string
-}
-
-variable "security_group_id" {
-  description = "ID do grupo de segurança para o RDS"
-  type        = string
-}

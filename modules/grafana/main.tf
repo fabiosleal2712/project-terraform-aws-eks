@@ -9,3 +9,9 @@ resource "helm_release" "grafana" {
     value = "ClusterIP"
   }
 }
+
+provider "helm" {
+  kubernetes {
+    config_path = "~/.kube/kubeconfig"
+  }
+}
