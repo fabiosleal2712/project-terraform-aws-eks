@@ -14,5 +14,9 @@ variable "availability_zones" {
 variable "subnet_ids" {
   description = "IDs das subnets"
   type        = list(string)
-  default     = ["subnet-0918b5e0264f8fc28", "subnet-0a145008d3db2fc92"] 
+}
+
+variable "security_group_id" {
+  description = "ID do grupo de segurança para o RDS"
+  type        = string
 }

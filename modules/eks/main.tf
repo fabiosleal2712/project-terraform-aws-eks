@@ -17,13 +17,11 @@ module "eks" {
 }
 
 resource "aws_eks_cluster" "this" {
-  name     = "my-new-cluster"  # Alterado o nome do cluster
+  name     = "my-new-cluster-unique-name"
   role_arn = var.cluster_role_arn
-
   vpc_config {
     subnet_ids         = var.subnet_ids
-    security_group_ids = [var.security_group_id]
-
+    security_group_ids = var.security_group_ids  # Use a variável aqui
     endpoint_public_access  = true
     endpoint_private_access = true
   }

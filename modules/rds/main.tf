@@ -1,13 +1,3 @@
-variable "vpc_id" {
-  description = "ID da VPC onde o RDS será criado"
-  type        = string
-}
-
-variable "security_group_id" {
-  description = "ID do grupo de segurança para o RDS"
-  type        = string
-}
-
 resource "aws_db_instance" "default" {
   allocated_storage    = 20
   engine               = "mysql"
@@ -19,13 +9,38 @@ resource "aws_db_instance" "default" {
   parameter_group_name = "default.mysql8.0"
   skip_final_snapshot  = true
   vpc_security_group_ids = [var.security_group_id]
+  availability_zone = var.availability_zones[0]
   db_subnet_group_name = aws_db_subnet_group.default.name
 }
 
 resource "aws_db_subnet_group" "default" {
   name       = "mydb-subnet-group"
-  subnet_ids = [
-    "subnet-0918b5e0264f8fc28",  # us-east-1a
-    "subnet-0a145008d3db2fc92"   # us-east-1b
-  ]
+  subnet_ids = var.subnet_ids
+
+  tags = {
+    Name = "mydb-subnet-group"
+  }
+}
+
+resource "aws_security_group" "rds" {
+  vpc_id = var.vpc_id
+  description = "Security group for RDS"
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "rds-sg"
+  }
 }

@@ -13,7 +13,7 @@ variable "vpc_cidr" {
 variable "security_group_id" {
   description = "ID do grupo de segurança para as instâncias EC2"
   type        = string
-  default     = "sg-000031672e37c8557"
+  #default     = "sg-000031672e37c8557"
 }
 variable "db_password" {
   description = "The password for the database"
@@ -37,17 +37,17 @@ variable "availability_zones" {
 variable "cluster_role_arn" {
   description = "ARN da role do cluster EKS"
   type        = string
-  default     = "arn:aws:iam::130281283408:role/my-cluster-cluster-20240817072652412600000005"
+  #default     = "arn:aws:iam::130281283408:role/my-cluster-cluster-20240817072652412600000005"
 }
 
 variable "cluster_name" {
   description = "Nome do cluster EKS"
   type        = string
-  default     = "my-cluster" 
+  #default     = "my-cluster" 
 }
 
 variable "security_group_ids" {
   description = "IDs dos grupos de segurança para as instâncias EC2"
   type        = list(string)
-  default     = ["sg-000031672e37c8557"]
+  #default     = ["sg-000031672e37c8557"]
 }

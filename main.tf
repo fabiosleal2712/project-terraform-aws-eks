@@ -16,30 +16,11 @@ module "ec2" {
   security_group_id = aws_security_group.main.id
 }
 
-resource "aws_security_group" "main" {
-  vpc_id = module.vpc.vpc_id
-  description = "EKS Cluster Security Group"
-  ingress {
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+
 module "eks" {
   source = "./modules/eks"
-  vpc_id = module.vpc.vpc_id
-  subnet_ids = [
-    module.vpc.private_subnet_a_id,
-    module.vpc.private_subnet_b_id,
-    module.vpc.private_subnet_c_id
-  ]
+  vpc_id = aws_vpc.main.id
+  subnet_ids = aws_subnet.public[*].id
   cluster_role_arn = var.cluster_role_arn
   cluster_name = var.cluster_name
   security_group_ids = [aws_security_group.main.id]
@@ -51,8 +32,12 @@ provider "kubernetes" {
 module "rds" {
   source = "./modules/rds"
   vpc_id = module.vpc.vpc_id  
-  subnet_ids = module.vpc.private_subnets  # Certifique-se de que estas sub-redes estão em diferentes AZs
-  security_group_id = aws_security_group.main.id  
+  subnet_ids = [
+    module.vpc.private_subnet_a_id,
+    module.vpc.private_subnet_b_id,
+    module.vpc.private_subnet_c_id
+  ]
+  security_group_id = aws_security_group.rds.id  
   db_password = var.db_password
 }
 
