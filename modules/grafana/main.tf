@@ -1,15 +1,10 @@
-resource "helm_release" "grafana" {
-  name       = "grafana"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "grafana"
-  namespace  = "monitoring"
-
-  set {
-    name  = "service.type"
-    value = "ClusterIP"
+resource "null_resource" "grafana" {
+  provisioner "local-exec" {
+    command = <<EOT
+      kubectl apply --validate=false -f ${path.module}/grafana-deployment.yaml
+    EOT
   }
 }
-
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
