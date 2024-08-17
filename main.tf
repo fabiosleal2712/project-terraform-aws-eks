@@ -35,10 +35,15 @@ resource "aws_security_group" "main" {
 module "eks" {
   source = "./modules/eks"
   vpc_id = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
-  
+  subnet_ids = [
+    module.vpc.private_subnet_a_id,
+    module.vpc.private_subnet_b_id,
+    module.vpc.private_subnet_c_id
+  ]
+  cluster_role_arn = var.cluster_role_arn
+  cluster_name = var.cluster_name
+  security_group_ids = [aws_security_group.main.id]
 }
-
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
@@ -64,9 +69,13 @@ module "cdn" {
 
 module "prometheus" {
   source = "./modules/prometheus"
-  vpc_id = module.vpc.vpc_id
+  
+  providers = {
+    kubernetes.k8s = kubernetes
+  }
+
+  vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
-  depends_on = [module.eks]
 }
 
 module "grafana" {
@@ -74,4 +83,6 @@ module "grafana" {
   vpc_id = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
   depends_on = [module.eks]
+
+ 
 }

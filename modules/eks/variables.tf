@@ -14,3 +14,20 @@ variable "security_group_id" {
   type        = string
   default = "sg-000031672e37c8557"
 }
+
+variable "cluster_name" {
+  description = "Nome do cluster EKS"
+  type        = string
+}
+
+
+variable "cluster_role_arn" {
+  description = "ARN da role do cluster EKS"
+  type        = string
+}
+
+
+variable "security_group_ids" {
+  description = "IDs dos grupos de segurança"
+  type        = list(string)
+}

@@ -5,6 +5,17 @@ resource "null_resource" "grafana" {
     EOT
   }
 }
-provider "kubernetes" {
-  config_path = "~/.kube/config"
+
+#provider "kubernetes" {
+#  config_path = "~/.kube/config"
+#}
+
+
+
+terraform {
+  required_providers {
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+  }
 }

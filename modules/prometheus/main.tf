@@ -5,6 +5,20 @@ resource "null_resource" "prometheus" {
     EOT
   }
 }
-provider "kubernetes" {
-  config_path = "~/.kube/config"
+
+
+#provider "kubernetes" {
+#  config_path = "~/.kube/config"
+#}
+
+terraform {
+  required_providers {
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+      configuration_aliases = [
+        kubernetes.k8s,
+      ]
+    }
+  }
 }

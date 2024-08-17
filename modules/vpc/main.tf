@@ -53,8 +53,8 @@ resource "aws_security_group" "main" {
 }
 
 resource "aws_subnet" "private_a" {
-  vpc_id            = var.vpc_id
-  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 1)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.cidr_block, 8, 4)
   availability_zone = "us-east-1a"
   tags = {
     Name = "private-subnet-a"
@@ -62,10 +62,19 @@ resource "aws_subnet" "private_a" {
 }
 
 resource "aws_subnet" "private_b" {
-  vpc_id            = var.vpc_id
-  cidr_block        = cidrsubnet(var.vpc_cidr, 8, 2)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.cidr_block, 8, 5)
   availability_zone = "us-east-1b"
   tags = {
     Name = "private-subnet-b"
+  }
+}
+
+resource "aws_subnet" "private_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(var.cidr_block, 8, 6)
+  availability_zone = "us-east-1c"
+  tags = {
+    Name = "private-subnet-c"
   }
 }
