@@ -21,7 +21,11 @@ variable "db_password" {
   default     = "L2pP2Da2FSjzZN"
 }
 
-
+variable "vpc_id" {
+  description = "ID da VPC"
+  type        = string
+  default     = "vpc-09c6102458be2706e"
+}
 
 variable "availability_zones" {
   description = "Lista de zonas de disponibilidade"

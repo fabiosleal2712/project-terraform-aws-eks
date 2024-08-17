@@ -3,8 +3,10 @@ provider "aws" {
 }
 
 module "vpc" {
-  source = "./modules/vpc"
+  source     = "./modules/vpc"
   cidr_block = var.vpc_cidr
+  vpc_id     = var.vpc_id
+  vpc_cidr   = var.vpc_cidr
 }
 
 module "ec2" {

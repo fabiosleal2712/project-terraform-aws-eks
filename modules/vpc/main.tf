@@ -69,7 +69,3 @@ resource "aws_subnet" "private_b" {
     Name = "private-subnet-b"
   }
 }
-
-output "private_subnets" {
-  value = [aws_subnet.private_a.id, aws_subnet.private_b.id]
-}
