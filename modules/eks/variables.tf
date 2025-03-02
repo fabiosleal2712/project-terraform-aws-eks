@@ -8,7 +8,6 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-
 variable "security_group_id" {
   description = "ID do grupo de segurança para as instâncias EC2"
   type        = string
@@ -20,14 +19,22 @@ variable "cluster_name" {
   type        = string
 }
 
-
 variable "cluster_role_arn" {
   description = "ARN da role do cluster EKS"
   type        = string
 }
 
+variable "cluster_status" {
+  description = "Status do cluster EKS"
+  type        = string
+}
 
 variable "security_group_ids" {
   description = "IDs dos grupos de segurança"
   type        = list(string)
+}
+
+variable "principal_arn" {
+  description = "ARN do principal"
+  type        = string
 }

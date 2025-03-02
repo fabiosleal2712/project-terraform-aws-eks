@@ -33,7 +33,6 @@ variable "availability_zones" {
   default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
-
 variable "cluster_role_arn" {
   description = "ARN da role do cluster EKS"
   type        = string
@@ -49,5 +48,41 @@ variable "cluster_name" {
 variable "security_group_ids" {
   description = "IDs dos grupos de segurança para as instâncias EC2"
   type        = list(string)
-  #default     = ["sg-000031672e37c8557"]
+  default     = []
+}
+
+variable "aws_access_key" {
+  description = "The access key for AWS"
+  type        = string
+}
+
+variable "aws_secret_key" {
+  description = "The secret key for AWS"
+  type        = string
+}
+
+variable "ami_id" {
+  description = "ID da AMI"
+  type        = string
+}
+
+variable "provider_path" {
+  description = "Caminho do provedor"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "Tipo de instância"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "IDs das subnets"
+  type        = list(string)
+}
+
+variable "principal_arn" {
+  description = "ARN do principal"
+  type        = string
+  default     = "arn:aws:iam::123456789012:role/example-role"
 }

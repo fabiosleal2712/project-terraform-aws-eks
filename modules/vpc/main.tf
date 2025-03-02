@@ -18,6 +18,48 @@ resource "aws_subnet" "public" {
   }
 }
 
+resource "aws_subnet" "private" {
+  count = length(var.availability_zones)
+  vpc_id = aws_vpc.main.id
+  cidr_block = cidrsubnet(var.vpc_cidr, 8, count.index + 10)
+
+  availability_zone = element(var.availability_zones, count.index)
+
+  tags = {
+    Name = "private-subnet-${count.index}"
+  }
+}
+
+resource "aws_subnet" "private_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = element(var.availability_zones, 0)
+
+  tags = {
+    Name = "private-subnet-a"
+  }
+}
+
+resource "aws_subnet" "private_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.4.0/24"
+  availability_zone = element(var.availability_zones, 1)
+
+  tags = {
+    Name = "private-subnet-b"
+  }
+}
+
+resource "aws_subnet" "private_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.5.0/24"
+  availability_zone = element(var.availability_zones, 2)
+
+  tags = {
+    Name = "private-subnet-c"
+  }
+}
+
 resource "aws_security_group" "main" {
   vpc_id = aws_vpc.main.id
   description = "Main security group"

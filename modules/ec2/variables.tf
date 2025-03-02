@@ -12,3 +12,13 @@ variable "security_group_id" {
   description = "ID do Security Group"
   type        = string
 }
+
+variable "ami_id" {
+  description = "ID da AMI"
+  type        = string
+}
+
+variable "instance_type" {
+  description = "Tipo de instância"
+  type        = string
+}

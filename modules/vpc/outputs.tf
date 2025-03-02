@@ -6,7 +6,6 @@ output "public_subnets" {
   value = aws_subnet.public[*].id
 }
 
-
 output "private_subnets" {
   value = aws_subnet.private[*].id
 }
@@ -22,3 +21,5 @@ output "private_subnet_b_id" {
 output "private_subnet_c_id" {
   value = aws_subnet.private_c.id
 }
+
+// Remover a declaração duplicada do recurso aws_subnet.private_c

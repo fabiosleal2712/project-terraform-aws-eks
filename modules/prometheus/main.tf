@@ -1,15 +1,15 @@
 resource "null_resource" "prometheus" {
   provisioner "local-exec" {
     command = <<EOT
-      kubectl apply --validate=false -f ${path.module}/prometheus-deployment.yaml
+      kubectl config set-context --current --namespace=default
+      kubectl apply --validate=false -f modules/prometheus/prometheus-deployment.yaml
     EOT
   }
+
+  triggers = {
+    always_run = "${timestamp()}"
+  }
 }
-
-
-#provider "kubernetes" {
-#  config_path = "~/.kube/config"
-#}
 
 terraform {
   required_providers {

@@ -10,14 +10,14 @@ override.tf.json
 *_override.tf.json
 .terraform/
 .terraform.lock.hcl
-
+credencial_aws
 # Diretórios de sistema
 .DS_Store
 Thumbs.db
 
 # Logs
 *.log
-
+.vagrant/
 # Arquivos temporários
 *.tmp
 *.swp

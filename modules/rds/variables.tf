@@ -1,9 +1,7 @@
-
 variable "db_password" {
   description = "Senha do banco de dados"
   type        = string
 }
-
 
 variable "availability_zones" {
   description = "Lista de zonas de disponibilidade"
@@ -18,5 +16,10 @@ variable "subnet_ids" {
 
 variable "security_group_id" {
   description = "ID do grupo de segurança para o RDS"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "ID da VPC"
   type        = string
 }
