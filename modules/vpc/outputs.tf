@@ -22,4 +22,7 @@ output "private_subnet_c_id" {
   value = aws_subnet.private_c.id
 }
 
-// Remover a declaração duplicada do recurso aws_subnet.private_c
+output "security_group_id" {
+  description = "ID do security group principal"
+  value = aws_security_group.main.id
+}

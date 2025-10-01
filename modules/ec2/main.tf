@@ -1,9 +1,13 @@
 resource "aws_instance" "web" {
-  count = 2
-  ami = "ami-0ae8f15ae66fe8cda" // Exemplo de AMI, substitua conforme necessário
-  instance_type = "t2.micro"
-  subnet_id = element(var.subnet_ids, count.index)
+  count         = 2
+  ami           = var.ami_id
+  instance_type = var.instance_type
+  subnet_id     = element(var.subnet_ids, count.index)
   vpc_security_group_ids = [var.security_group_id]
+
+  tags = {
+    Name = "web-instance-${count.index}"
+  }
 }
 
 resource "aws_launch_template" "example" {
@@ -22,8 +26,8 @@ resource "aws_launch_template" "example" {
 }
 
 resource "aws_autoscaling_group" "example" {
-  desired_capacity     = 2
-  max_size             = 5
+  desired_capacity     = 1
+  max_size             = 1
   min_size             = 1
   vpc_zone_identifier  = var.subnet_ids
   launch_template {

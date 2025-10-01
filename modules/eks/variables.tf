@@ -38,3 +38,44 @@ variable "principal_arn" {
   description = "ARN do principal"
   type        = string
 }
+
+variable "node_role_arn" {
+  description = "ARN da IAM Role para as instâncias do Managed Node Group"
+  type        = string
+}
+
+variable "node_group_name" {
+  description = "Nome do Managed Node Group"
+  type        = string
+  default     = "default-ng"
+}
+
+variable "node_instance_types" {
+  description = "Tipos de instância para os nós"
+  type        = list(string)
+  default     = ["t3.micro"]
+}
+
+variable "node_desired_size" {
+  description = "Número desejado de nós"
+  type        = number
+  default     = 1
+}
+
+variable "node_min_size" {
+  description = "Número mínimo de nós"
+  type        = number
+  default     = 1
+}
+
+variable "node_max_size" {
+  description = "Número máximo de nós"
+  type        = number
+  default     = 1
+}
+
+variable "node_disk_size" {
+  description = "Tamanho do disco para os nós (GiB)"
+  type        = number
+  default     = 20
+}

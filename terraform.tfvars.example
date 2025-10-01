@@ -1,0 +1,27 @@
+# Arquivo de exemplo para variáveis do OpenTofu/Terraform
+# Copie este arquivo para terraform.tfvars e preencha com seus valores reais
+
+# Credenciais AWS (recomendado usar AWS CLI ou IAM roles ao invés de hardcode)
+aws_access_key = "YOUR_AWS_ACCESS_KEY"
+aws_secret_key = "YOUR_AWS_SECRET_KEY"
+
+# AMI ID - Amazon Linux 2 em us-east-1 (atualize conforme necessário)
+ami_id = "ami-0c55b159cbfafe1d0"  # Amazon Linux 2
+
+# Tipo de instância
+instance_type = "t3.micro"
+
+# IDs das subnets (serão criadas automaticamente pelo módulo VPC)
+subnet_ids = []
+
+# Caminho do provedor
+provider_path = "/usr/bin/tofu"
+
+# ARN da role do cluster EKS (você precisa criar essa role primeiro)
+cluster_role_arn = "arn:aws:iam::YOUR_ACCOUNT_ID:role/eks-cluster-service-role"
+
+# Nome do cluster EKS
+cluster_name = "my-eks-cluster"
+
+# ARN do principal (substitua pelo seu account ID)
+principal_arn = "arn:aws:iam::YOUR_ACCOUNT_ID:root"

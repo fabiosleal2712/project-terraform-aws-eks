@@ -13,7 +13,7 @@ variable "vpc_cidr" {
 variable "security_group_id" {
   description = "ID do grupo de segurança para as instâncias EC2"
   type        = string
-  #default     = "sg-000031672e37c8557"
+  default     = "placeholder"
 }
 variable "db_password" {
   description = "The password for the database"
@@ -36,7 +36,7 @@ variable "availability_zones" {
 variable "cluster_role_arn" {
   description = "ARN da role do cluster EKS"
   type        = string
-  #default     = "arn:aws:iam::130281283408:role/my-cluster-cluster-20240817072652412600000005"
+  default     = "placeholder"
 }
 
 variable "cluster_name" {
@@ -51,15 +51,7 @@ variable "security_group_ids" {
   default     = []
 }
 
-variable "aws_access_key" {
-  description = "The access key for AWS"
-  type        = string
-}
-
-variable "aws_secret_key" {
-  description = "The secret key for AWS"
-  type        = string
-}
+# Credenciais AWS removidas - usando AWS CLI
 
 variable "ami_id" {
   description = "ID da AMI"
