@@ -47,6 +47,7 @@ Componentes criados:
 - EKS 1.30 com `access_config.authentication_mode = API_AND_CONFIG_MAP` (suporte a Access Entries v2).
 - IAM Roles do cluster e dos nós. Para os nós, anexamos políticas padrão + `AmazonSSMManagedInstanceCore`.
 - Managed Node Group (t3.micro). Ajustado para `desired=2` para evitar saturação de pods.
+  - Em momento posterior, escalamos para `desired=3` e `max=3` para liberar capacidade quando o scheduler acusou "Too many pods".
 - RDS PostgreSQL 16 (usuário `postgres`, DB `mydb`).
 - Repositórios ECR por microserviço.
 
@@ -56,6 +57,7 @@ Problemas resolvidos no caminho:
 - NodeGroup falhando por IP público: ativamos IGW, rota pública e `map_public_ip_on_launch` nas subnets.
 - kubectl sem acesso: configuramos `aws_eks_access_entry` + `AmazonEKSClusterAdminPolicy` para o `principal_arn` correto.
 - RDS em rede errada: unificamos SG vindo do módulo da VPC, migramos de MySQL para Postgres 16 e recriamos a instância.
+- Capacidade de scheduling: aumentamos o Node Group quando o describe do pod mostrou `Too many pods`.
 
 ## 3) Conectividade com o cluster Kubernetes
 
@@ -118,9 +120,13 @@ Problemas resolvidos no caminho:
 
   # 5) Reinicie o pod para usar a imagem local
   kubectl -n nutri-veda delete pod -l app=chat-api
+  kubectl -n nutri-veda rollout status deploy/chat-api
   ```
 
 Observação: o script faz `docker save`, envia para S3, gera URL pré-assinada, baixa no nó (via SSM) e importa no containerd.
+
+Atualização importante: corrigimos o `scripts/load-image-to-eks-node.sh` para evitar erro ao passar `--parameters` no `aws ssm send-command`.
+Agora o script usa um arquivo JSON temporário com os comandos e espera o status do SSM até `Success` (com timeout e mensagens claras).
 
 ## 7) Exposição externa (opcional)
 
@@ -147,3 +153,4 @@ Observação: o script faz `docker save`, envia para S3, gera URL pré-assinada,
 - Nó sem Internet: confira IGW, route table pública e `map_public_ip_on_launch` nas subnets públicas.
 - kubectl sem acesso: confira Access Entry do EKS (v2) e `aws eks update-kubeconfig`.
 - Conexão RDS: verifique SG/portas, usuário `postgres`, DB `mydb`, e `SSL Mode=Require`.
+- CreateContainerConfigError (secret not found): aplique `./scripts/apply-db-secret.sh` e reinicie o pod.

@@ -61,11 +61,49 @@ if [ -z "$URL" ]; then
 fi
 
 # 4) Baixar no node (curl) e carregar no containerd
-aws ssm send-command \
+#    Use um arquivo JSON para evitar problemas de escape/parsing no CLI
+PARAMS_FILE=$(mktemp /tmp/ssm-params-XXXXXX.json)
+cat > "$PARAMS_FILE" <<EOF
+{
+  "commands": [
+    "sudo mkdir -p /tmp/eks-image",
+    "sudo curl -L \"$URL\" -o /tmp/eks-image/img.tar",
+    "sudo ctr -n k8s.io images import /tmp/eks-image/img.tar",
+    "sudo ctr -n k8s.io images tag docker.io/library/$LOCAL_IMAGE:$TAG $LOCAL_IMAGE:$TAG"
+  ]
+}
+EOF
+
+CMD_ID=$(aws ssm send-command \
   --instance-ids "$INSTANCE_ID" \
   --document-name "AWS-RunShellScript" \
   --comment "Load image tar into containerd" \
-  --parameters commands="sudo mkdir -p /tmp/eks-image && sudo curl -L '$URL' -o /tmp/eks-image/img.tar && sudo ctr -n k8s.io images import /tmp/eks-image/img.tar && sudo ctr -n k8s.io images tag docker.io/library/$LOCAL_IMAGE:$TAG $LOCAL_IMAGE:$TAG" \
-  --query 'Command.CommandId' --output text
+  --parameters file://"$PARAMS_FILE" \
+  --query 'Command.CommandId' --output text)
 
-echo "Comando enviado. Aguarde alguns segundos e reinicie o pod para usar a imagem local (imagePullPolicy: Never)."
+echo "Comando SSM enviado (CommandId: $CMD_ID). Aguardando conclusão..."
+
+# 5) Espera pelo término do comando
+STATUS=""
+for i in {1..60}; do
+  STATUS=$(aws ssm get-command-invocation \
+    --command-id "$CMD_ID" \
+    --instance-id "$INSTANCE_ID" \
+    --query 'Status' --output text || true)
+  echo "SSM status: $STATUS"
+  if [ "$STATUS" = "Success" ]; then
+    break
+  fi
+  if [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ] || [ "$STATUS" = "TimedOut" ]; then
+    echo "Falha ao executar comando no SSM (Status: $STATUS). Consulte os logs no AWS Systems Manager." >&2
+    exit 1
+  fi
+  sleep 5
+done
+
+if [ "$STATUS" != "Success" ]; then
+  echo "Tempo esgotado aguardando o SSM concluir. Verifique no console do Systems Manager." >&2
+  exit 1
+fi
+
+echo "Imagem importada e taggeada no node. Agora reinicie o pod para usar a imagem local (imagePullPolicy: Never)."

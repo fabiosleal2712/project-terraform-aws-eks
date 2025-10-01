@@ -124,9 +124,9 @@ module "eks" {
   node_role_arn = aws_iam_role.eks_node_role.arn
   node_group_name = "default-ng"
   node_instance_types = [var.instance_type]
-  node_desired_size = 2
+  node_desired_size = 3
   node_min_size = 1
-  node_max_size = 2
+  node_max_size = 3
   node_disk_size = 20
   
   depends_on = [aws_iam_role.eks_cluster_role]
