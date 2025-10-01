@@ -64,6 +64,11 @@ resource "aws_iam_role_policy_attachment" "eks_registry_policy" {
   role       = aws_iam_role.eks_node_role.name
 }
 
+resource "aws_iam_role_policy_attachment" "eks_node_ssm_core" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = aws_iam_role.eks_node_role.name
+}
+
 # Output dos ARNs das roles
 output "eks_cluster_role_arn" {
   description = "ARN da role do cluster EKS"

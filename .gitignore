@@ -15,9 +15,11 @@ credencial_aws
 .DS_Store
 Thumbs.db
 
+
 # Logs
 *.log
 .vagrant/
+nutri-veda/
 # Arquivos temporários
 *.tmp
 *.swp
