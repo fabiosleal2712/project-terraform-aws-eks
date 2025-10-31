@@ -1,9 +1,16 @@
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name        = "db_credentials_new_unique"
-  description = "Database credentials"
+  name                    = "nutriveda-db-credentials-${formatdate("YYYYMMDDhhmmss", timestamp())}"
+  description             = "Database credentials for NutriVeda"
+  recovery_window_in_days = 0
 
   tags = {
-    Name = "db_credentials_new_unique"
+    Name        = "nutriveda-db-credentials"
+    Environment = "production"
+    ManagedBy   = "OpenTofu"
+  }
+
+  lifecycle {
+    ignore_changes = [name]
   }
 }
 
