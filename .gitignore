@@ -15,6 +15,16 @@ credencial_aws
 .DS_Store
 Thumbs.db
 
+# certificados
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.jks
+*.keystore
+*.storepass
+*.pfx
 
 # Logs
 *.log
@@ -23,3 +33,4 @@ nutri-veda/
 # Arquivos temporários
 *.tmp
 *.swp
+*.swo
