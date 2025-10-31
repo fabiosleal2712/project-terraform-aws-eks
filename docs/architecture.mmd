@@ -1,0 +1,108 @@
+%% Arquitetura do projeto - Mermaid
+%% Arquivo gerado automaticamente
+
+flowchart LR
+  %% Users and clients
+  subgraph Clients [Usuários]
+    Browser["Navegador / Cliente (Web, Mobile)"]
+  end
+
+  %% Web frontends
+  subgraph Frontend [Frontends]
+    WebApp["WebApp (Blazor)"]
+    AdmDashboard["Adm Dashboard (Blazor)"]
+  end
+
+  %% APIs
+  subgraph APIs [APIs / Microservices]
+    Diary["diary-api"]
+    Chat["chat-api"]
+    Migrations["migrations-api"]
+    Schedulings["schedulings-api"]
+    SystemSettings["systemsettings-api"]
+    Users["users-api"]
+  end
+
+  %% Infraestrutura Kubernetes
+  subgraph EKS [EKS Cluster]
+    direction TB
+    Nodes["Worker Nodes (EC2)\n- kubelet\n- docker/containerd"]
+    K8s["Kubernetes (Deployments / Services / ConfigMaps) "]
+  end
+
+  %% Storage & CI/CD
+  subgraph CloudInfra [Cloud Infra]
+    ECR["ECR (imagens)"]
+    S3["S3 (artifacts / images tar) "]
+    RDS["RDS - PostgreSQL"]
+    Secrets["AWS Secrets Manager / Kubernetes Secret 'db-conn'"]
+    Terraform["Terraform (IaC) / modules/"]
+    CICD["CI/CD (build pipeline)\n(ex.: GitHub Actions / scripts)"]
+  end
+
+  %% Observability
+  subgraph Observability [Monitoramento]
+    Prometheus["Prometheus"]
+    Grafana["Grafana"]
+  end
+
+  %% Flows
+  Browser -->|HTTP/HTTPS| WebApp
+  Browser -->|HTTP/HTTPS| AdmDashboard
+
+  WebApp -->|REST/gRPC/HTTP| Diary
+  WebApp --> Chat
+  WebApp --> Users
+
+  AdmDashboard -->|REST/gRPC/HTTP| Diary
+  AdmDashboard --> Users
+  AdmDashboard --> SystemSettings
+
+  Diary -->|DB| RDS
+  Users -->|DB| RDS
+  SystemSettings -->|DB| RDS
+  Migrations -->|DB migrations| RDS
+
+  Chat -->|pub/sub / hubs| Chat
+
+  %% Kubernetes mapping
+  WebApp -.-> K8s
+  AdmDashboard -.-> K8s
+  Diary -.-> K8s
+  Chat -.-> K8s
+  Migrations -.-> K8s
+  Schedulings -.-> K8s
+  SystemSettings -.-> K8s
+  Users -.-> K8s
+
+  K8s --> Nodes
+  K8s -->|Secrets| Secrets
+
+  %% CI/CD and image flow
+  CICD -->|builds Docker| ECR
+  CICD -->|optional: export tar -> S3| S3
+  ECR -->|pull images| Nodes
+  S3 -->|ssm/copy/load tar| Nodes
+
+  %% IaC
+  Terraform -->|provision| EKS
+  Terraform -->|provision| RDS
+  Terraform -->|provision| VPC[(VPC / Subnets / SGs)]
+
+  %% Observability mapping
+  Nodes --> Prometheus
+  Prometheus --> Grafana
+
+  %% Extras / modules
+  Modules["módulos:\nmodules/eks\nmodules/rds\nmodules/grafana\nmodules/prometheus\nmodules/vpc"]
+  Terraform --> Modules
+
+  classDef infra fill:#f8f9fa,stroke:#333,stroke-width:1px;
+  class CloudInfra,Terraform infra
+
+  %% Legend
+  subgraph Legend
+    L1([ ]) --- L2([ ])
+  end
+
+%% Fim do diagrama
